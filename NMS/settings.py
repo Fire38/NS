@@ -41,7 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'webpack_loader',
     'django_celery_beat',
-    'monitoring_app'
+    'rest_framework',
+    'monitoring_app',
+    'app_api',
 ]
 
 MIDDLEWARE = [
