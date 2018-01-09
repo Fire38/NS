@@ -7,7 +7,8 @@ DEVICES_TYPE_CHOICES = (
     ('no_choice', 'Не указан'),
     ('switch', 'Коммутатор'),
     ('logdog', 'LogDog'),
-    ('statistic', 'Статистика')
+    ('statistic', 'Статистика'),
+	('gateway', 'Шлюз')
 )
 
 class Device(models.Model):

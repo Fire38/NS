@@ -1,0 +1,4 @@
+/* ячейки таблицы мониторинга */
+.table td, .table th {
+	border-right: 1px solid white;
+}

@@ -1,12 +1,18 @@
+{% load staticfiles %}
 {% load render_bundle from webpack_loader %}
+
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="UTF-8" />
 		<title>Главная</title>
+		<link rel='stylesheet' href="{% static 'css/bootstrap.min.css' %}">
+		<link rel='stylesheet' href="{% static 'css/index.css' %}">
+		<link rel='stylesheet' href="{% static 'css/my_css.css' %}">
 	</head>
+	
 	<body>
-		ghbdtn
+		
 		<div id="root">
 			
 		</div>

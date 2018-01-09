@@ -4,7 +4,7 @@ from .views import DevicesList, DeviceDetail
 
 
 urlpatterns = [
-	re_path('^devices/$', DevicesList.as_view()),
+	re_path('^devices/(?P<device_type>[a-z]+)/$', DevicesList.as_view()),
 	re_path('^device/(?P<pk>[0-9]+)/$', DeviceDetail.as_view()),
 ]
 

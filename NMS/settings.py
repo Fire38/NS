@@ -131,7 +131,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-
+#WEBPACK CONFIG
 WEBPACK_LOADER = {
     'DEFAULT': {
         'BUNDLE_DIR_NAME': 'bundles/',

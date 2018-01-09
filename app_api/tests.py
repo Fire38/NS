@@ -16,22 +16,22 @@ class DeviceListTest(APITestCase):
 		self.user.save()
 		
 	def test_get_method(self):
-		res = self.client.get('/api/devices/')
+		res = self.client.get('/api/devices/switch/')
 		self.assertEqual(res.status_code, status.HTTP_200_OK)
 		
 	def test_post_method_without_auth(self):
-		res = self.client.post('/api/devices/', {'device_type': 'switch', 'host_ip': '192.168.1.1', 'address': '123'})
+		res = self.client.post('/api/devices/switch/', {'device_type': 'switch', 'host_ip': '192.168.1.1', 'address': '123'})
 		self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
 		
 	def test_post_method_auth(self):
 		self.client.login(username='testuser', password='test_password')
-		res = self.client.post('/api/devices/',  {'device_type': 'switch', 'host_ip': '192.168.1.1', 'address': '123'})
+		res = self.client.post('/api/devices/switch/',  {'device_type': 'switch', 'host_ip': '192.168.1.1', 'address': '123'})
 		self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 		self.assertEqual(Device.objects.count(), 1)
 		
 	def test_post_method_with_incorrect_ip(self):
 		self.client.login(username='testuser', password='test_password')
-		res = self.client.post('/api/devices/',  {'device_type': 'switch', 'host_ip': '192.168.270.1', 'address': '123'})
+		res = self.client.post('/api/devices/switch/',  {'device_type': 'switch', 'host_ip': '192.168.270.1', 'address': '123'})
 		self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 		
 		

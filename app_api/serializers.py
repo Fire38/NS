@@ -7,4 +7,3 @@ class DeviceSerializer(serializers.ModelSerializer):
 		fields = ('id','device_type', 'host_ip', 'address', 'description', 'access_status')
 		
 
-		

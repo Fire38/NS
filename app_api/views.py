@@ -1,5 +1,6 @@
 from rest_framework import generics
 from rest_framework import permissions
+from django.http import Http404
 
 from monitoring_app.models import Device
 from .serializers import DeviceSerializer
@@ -12,6 +13,15 @@ class DevicesList(generics.ListCreateAPIView):
 	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 	queryset = Device.objects.all()
 	serializer_class = DeviceSerializer
+	lookup_url_kwarg = 'device_type'
+	
+	def get_queryset(self):
+		device_type = self.kwargs.get(self.lookup_url_kwarg)
+		try:
+			devices = Device.objects.filter(device_type=device_type).order_by('host_ip')
+			return devices
+		except:
+			raise Http404
 
 
 class DeviceDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -21,3 +31,12 @@ class DeviceDetail(generics.RetrieveUpdateDestroyAPIView):
 	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 	queryset = Device.objects.all()
 	serializer_class = DeviceSerializer
+
+
+class TotalStatistic(generics.ListAPIView):
+	"""
+	List general sstatistic values
+	"""
+	permission_classes = (permissions.IsAuthenticated,)
+	quesryset = Device.objects.all()
+	
