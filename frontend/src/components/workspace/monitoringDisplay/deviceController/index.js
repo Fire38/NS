@@ -1,6 +1,6 @@
 import React from 'react';
-import { NetworkElementsRow, NetworkElements } from './networkDevices';
-
+import { NetworkElementsRow } from '../networkDevices/';
+import loadingGif from '../../../../images/loading-icon.gif'
 
 export class DevicesController extends React.Component{
 	constructor(props){
@@ -16,6 +16,7 @@ export class DevicesController extends React.Component{
 	
 	// при монтировании компонента сразу начинаем посылать запросы по заданному url
 	componentDidMount(){
+		document.title = 'Главная'
 		let type = this.state.deviceTypeFromUrl
 		//console.log("Полезли сразу сюда" + this.state.deviceTypeFromUrl)
 		/* this не передается
@@ -69,35 +70,32 @@ export class DevicesController extends React.Component{
 		if (devices){
 		//делим полученный массив на массивы по 5 элементов
 		for (let i=0; i<devices.length; i+=size){
-			var ar = devices.slice(i, i+size)
+			let ar = devices.slice(i, i+size)
 			//console.log(ar)
 			deviceArray.push(ar)
 			}
 		} else {}
 		
-		// переменная хранящая отображение
-		var devicesForDisplay
-		if (devices === null){
-			setTimeout('', 5000)
-			devicesForDisplay = <div> Пожалуйста подождите, идет загрузка </div>
-		}else if (devices.length > 0){
-			devicesForDisplay = <div className="table-responsive">
-                <table className="table table-striped">
-                    <tbody>
-                        {	
-							deviceArray.map((row,rowIndex) =>(
-								<NetworkElementsRow key = {rowIndex} index = {rowIndex} array = {row}/>
-								))
-						}
-                    </tbody>
-                </table>
-            </div>
-		} else {
-			devicesForDisplay = <div> Элементы отсутствуют в базе данных </div>
-		}
 
 		return (
-			devicesForDisplay
+			devices !== null ?
+				<div className="table-responsive">
+					<table className="table table-striped">
+						<tbody>
+							{	
+								deviceArray.map((row,rowIndex) =>(
+									<NetworkElementsRow key = {rowIndex} index = {rowIndex} array = {row}/>
+									))
+							}
+						</tbody>
+					</table>
+				</div>
+				: <div>
+					<img src={ loadingGif } alt='Загрузка'/>
+					<br/>
+					Загрузка
+				</div>
+			
 		)
 	}
 }

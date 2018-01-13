@@ -1,20 +1,29 @@
 import React from 'react';
-import { Link } from 'react-router';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-
+import { Route, Switch } from 'react-router-dom';
 import { Header } from './header/';
+import { MonitoringDisplay } from './workspace/monitoringDisplay/';
+import { AddForm } from './workspace/form/';
+import { DeviceDetail } from './workspace/monitoringDisplay/deviceDetail/';
 
-import { Workspace } from './workspace/';
-
-import { AddForm } from './workspace/addForm';
 export class App extends React.Component{
 	render(){
 		return(
 			<div>
 				<Header />
-				<Workspace />
 				
-					<Route path='/add_device' activeClassName="active" component={ AddForm } />
+				<main>
+					<Switch>
+					{/*
+						<Route exact path='/' activeClassName="active" component={ NetworkStatistic } />
+						<Route path='/device/:type' component={ DevicesController } />
+						*/}
+						<Route exact path='/' activeClassName="active" component={ MonitoringDisplay } />
+						<Route path='/device' component={ MonitoringDisplay } />
+						<Route path='/add_device' component={ AddForm } />
+						<Route path='/detail/:id' component={ DeviceDetail } />
+					</Switch>
+				</main>
+					
 				
 			</div>
 		)

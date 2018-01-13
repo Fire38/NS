@@ -1,8 +1,11 @@
 import React from 'react';
+import nut from '../../../../images/nut.png'
+
 
 /* Статистика на главной */
 export class NetworkStatistic extends React.Component{
 	componentDidMount(){
+		document.title = 'Главная'
 		console.log('Загрузка статки')
 	}
 	render(){
@@ -33,8 +36,9 @@ export class NetworkElementsRow extends React.Component {
 export class NetworkElements extends React.Component {
 	render(){
 		let color = this.props.access_status === true ? "green" : "red";
+		let detailUrl = '/api/device/' + this.props.id + '/';
 		return (
-			<td bgcolor={color} key={this.props.id} > {this.props.host_ip} </td>
+			<td bgcolor={color} key={this.props.id} > {this.props.host_ip} <a href={detailUrl}><img src={nut} alt='детали'/></a> </td>
 		)
 	}
 }

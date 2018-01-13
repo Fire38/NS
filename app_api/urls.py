@@ -8,4 +8,4 @@ urlpatterns = [
 	re_path('^device/(?P<pk>[0-9]+)/$', DeviceDetail.as_view()),
 ]
 
-urlpattern = format_suffix_patterns(urlpatterns)
+#urlpattern = format_suffix_patterns(urlpatterns)
