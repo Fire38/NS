@@ -7,7 +7,8 @@ urlpatterns = [
     path('device/ups', index),
     path('device/logdog', index),
     path('device/switch', index),
-    path('device/detail', index),
+    #детали устройства
+    path('detail/<int:id>', index),
     #форма
     path('add_device', index, name='add')
 ]

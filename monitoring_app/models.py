@@ -22,5 +22,5 @@ class Device(models.Model):
 		return self.device_type + " " + self.host_ip
 	
 	def ping(self):
-		res = subprocess.call(['ping', '-c', '2', '-W', '1', self.host_ip,])
+		res = subprocess.call(['ping', '-c', '3', '-W', '3', self.host_ip,])
 		return res
