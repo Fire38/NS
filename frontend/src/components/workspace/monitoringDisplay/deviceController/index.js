@@ -63,7 +63,7 @@ export class DevicesController extends React.Component{
 	render(){
 		let devices = this.state.devices;
 		
-		let size = 5
+		let size = 6
 		let deviceArray = []
 		
 		// проверяем т к devices сначала null, не успевает отработать loadDevices()
@@ -75,27 +75,26 @@ export class DevicesController extends React.Component{
 			deviceArray.push(ar)
 			}
 		} else {}
-		
+		console.log('DEVICES', devices)
 
 		return (
-			devices !== null ?
-				<div className="table-responsive">
-					<table className="table table-striped">
-						<tbody>
-							{	
-								deviceArray.map((row,rowIndex) =>(
-									<NetworkElementsRow key = {rowIndex} index = {rowIndex} array = {row}/>
-									))
-							}
-						</tbody>
-					</table>
-				</div>
-				: <div>
-					<img src={ loadingGif } alt='Загрузка'/>
-					<br/>
-					Загрузка
-				</div>
+			devices === null || devices.length === 0 ?
+			 <div className='loading-icon'>
+				<img src={ loadingGif } alt='Загрузка данных'/>
+				<br/>
+				Загрузка
+			</div>
+			:
+			<div className="container-fluid">
 			
+						{	
+							deviceArray.map((row,rowIndex) =>(
+								<NetworkElementsRow key = {rowIndex} index = {rowIndex} array = {row}/>
+								))
+						}
+					
+				
+			</div>
 		)
 	}
 }

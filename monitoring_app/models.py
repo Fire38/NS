@@ -1,5 +1,6 @@
 from django.db import models
 
+from django.utils import timezone
 import subprocess
 # Create your models here.
 
@@ -17,6 +18,7 @@ class Device(models.Model):
 	address = models.CharField(max_length=50)
 	description = models.CharField(max_length=500, blank=True)
 	access_status = models.BooleanField(default=False)
+	last_activity = models.DateTimeField(auto_now_add=True, blank=True)
 	
 	def __str__(self):
 		return self.device_type + " " + self.host_ip

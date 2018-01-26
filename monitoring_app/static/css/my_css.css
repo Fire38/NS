@@ -1,10 +1,37 @@
 /* ячейки таблицы мониторинга */
-.table td, .table th {
+#NetworkElements{
 	border-right: 1px solid white;
+	margin-bottom: 2px; 
+	height:50px;
+	padding-top: 12px;
 }
-
 
 /* */
 .radioGroup input{
 	margin: 0px 7px 0px 20px;
 }
+
+
+.details-icon{
+	float: right;
+}
+
+.loading-icon{
+	position: absolute;
+	left: 50%;
+	margin-top: 25%;
+}
+
+
+.addDeviceForm{
+	position: absolute;
+	margin-top:10%;
+	left:30%;
+}
+
+.addHostIp, .addAddress, .addDescription{
+	margin-top:10px;
+	width:400px;
+}
+
+

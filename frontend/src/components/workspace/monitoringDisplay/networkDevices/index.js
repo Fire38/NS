@@ -22,12 +22,12 @@ export class NetworkElementsRow extends React.Component {
 	render(){
 		let networkArray = this.props.array
 		return (
-			<tr>{
+			<div className='row'>{
 				networkArray.map((device, index) => (
 					<NetworkElements key = {index} index = {index} host_ip = {device.host_ip} access_status = {device.access_status} id = {device.id}/>
 				))
 			}
-			</tr>
+			</div>
 		)
 	}
 }
@@ -39,7 +39,7 @@ export class NetworkElements extends React.Component {
 		let color = this.props.access_status === true ? "green" : "red";
 		let detailUrl = '/detail/' + this.props.id ;
 		return (
-			<td bgcolor={color} key={this.props.id} > {this.props.host_ip} <Link to={detailUrl}><img src={nut} alt='детали'/></Link> </td>
+			<div className='col-2' id='NetworkElements' style={{backgroundColor: color}} key={this.props.id} > {this.props.host_ip} <Link to={detailUrl}><img className="details-icon" src={nut} alt='детали'/></Link> </div>
 		)
 	}
 }

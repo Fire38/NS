@@ -8,7 +8,8 @@ export class DeviceDetail extends React.Component{
 					deviceIP:'',
 					deviceAddress:'',
 					deviceAccessStatus:'',
-					deviceDescription:''}
+					deviceDescription:'',
+					deviceLastActivity:''}
 	}
 	
 	componentDidMount(){
@@ -18,12 +19,14 @@ export class DeviceDetail extends React.Component{
 	
 	async loadDevice(){
 			let res = await fetch("/api/device/" + this.state.deviceId + "/").then(response => response.json())
-			console.log(res)
+			let d = new Date(res.last_activity).toLocaleString('ru')
+			console.log(d)
 			this.setState({deviceType: res.device_type,
 						  deviceIP: res.host_ip,
 						  deviceAddress: res.address,
 						  deviceAccessStatus: res.access_status,
-						  deviceDescription: res.description
+						  deviceDescription: res.description,
+						  deviceLastActivity: d
 						  })
 	}
 	
@@ -39,6 +42,7 @@ export class DeviceDetail extends React.Component{
 					<li>Адрес: { this.state.deviceAddress } </li>
 					<li>Статус: { status } </li>
 					<li>Описание: { this.state.deviceDescription } </li>
+					<li>Последнее появление в сети: { this.state.deviceLastActivity } </li>
 				</ul>
 			</div>
 		)

@@ -1,6 +1,6 @@
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework import permissions
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import reverse
 from rest_framework.response import Response
 
@@ -12,7 +12,7 @@ class DevicesList(generics.ListCreateAPIView):
 	"""
 	List all devices or create new device
 	"""
-	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+	#permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 	queryset = Device.objects.all()
 	serializer_class = DeviceSerializer
 	lookup_url_kwarg = 'device_type'
@@ -27,11 +27,14 @@ class DevicesList(generics.ListCreateAPIView):
 
 	# перепишем post для замены return
 	def create(self, request, *args, **kwargs):
+		response = {'successing_create': False}
 		serializer = self.get_serializer(data=request.data)
-		serializer.is_valid(raise_exception=True)
-		self.perform_create(serializer)
-		headers = self.get_success_headers(serializer.data)
-		return HttpResponseRedirect(reverse('add'))
+		if serializer.is_valid():
+			self.perform_create(serializer)
+			headers = self.get_success_headers(serializer.data)
+			response['successing_create'] = True
+		return JsonResponse(response)
+	
 
 
 
