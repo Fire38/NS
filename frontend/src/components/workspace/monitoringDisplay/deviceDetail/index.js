@@ -37,12 +37,12 @@ export class DeviceDetail extends React.Component{
 			<div className='container'>
 				<h3>Детали </h3>
 				<ul>
-					<li>Тип: { this.state.deviceType } </li>
-					<li> IP: { this.state.deviceIP } </li>
-					<li>Адрес: { this.state.deviceAddress } </li>
-					<li>Статус: { status } </li>
-					<li>Описание: { this.state.deviceDescription } </li>
-					<li>Последнее появление в сети: { this.state.deviceLastActivity } </li>
+					<li><strong>Тип: </strong> { this.state.deviceType } </li>
+					<li><strong>IP</strong>: { this.state.deviceIP } </li>
+					<li><strong>Адрес:</strong> { this.state.deviceAddress } </li>
+					<li><strong>Статус:</strong> { status } </li>
+					<li><strong>Описание:</strong> { this.state.deviceDescription } </li>
+					<li><strong>Последнее появление в сети:</strong> { this.state.deviceLastActivity } </li>
 				</ul>
 			</div>
 		)

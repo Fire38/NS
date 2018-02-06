@@ -1,5 +1,6 @@
 from rest_framework import generics, status
 from rest_framework import permissions
+from rest_framework.views import APIView
 from django.http import Http404, HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import reverse
 from rest_framework.response import Response
@@ -48,10 +49,18 @@ class DeviceDetail(generics.RetrieveUpdateDestroyAPIView):
 	serializer_class = DeviceSerializer
 	
 
-class TotalStatistic(generics.ListAPIView):
+class GeneralStatistic(APIView):
 	"""
-	List general sstatistic values
+	List general statistic values
 	"""
-	permission_classes = (permissions.IsAuthenticated,)
-	quesryset = Device.objects.all()
+	#permission_classes = (permissions.IsAuthenticated,)
 	
+	def get(self, request):
+		device_count = Device.objects.count()
+		active_devices = Device.objects.filter(access_status=True).count()
+		inactive_devices = Device.objects.filter(access_status=False).count()
+		a = {}
+		a['device_count'] = device_count
+		a['active_devices'] = active_devices
+		a['inactive_devices'] = inactive_devices
+		return Response(a)

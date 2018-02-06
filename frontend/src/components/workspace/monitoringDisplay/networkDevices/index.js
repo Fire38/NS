@@ -5,16 +5,39 @@ import nut from '../../../../images/nut.png'
 
 /* Статистика на главной */
 export class NetworkStatistic extends React.Component{
+	constructor(props){
+		super(props)
+		this.state = {deviceCount: '',
+					activeDevices: '',
+					inactiveDevices: ''}
+	}
 	componentDidMount(){
 		document.title = 'Главная'
-		console.log('Загрузка статки')
+		this.loadStatistic()
+
 	}
+	
+	async loadStatistic(){
+		let res = await fetch("/api/statistic/").then(response => response.json())
+		console.log(res)
+		this.setState({deviceCount: res.device_count,
+					  activeDevices: res.active_devices,
+					  inactiveDevices: res.inactive_devices
+					  })
+	}
+	
 	render(){
 		return(
-			<p> Здесь статка </p>
+			<div>
+				<p><strong>Всего устройств:</strong> {this.state.deviceCount} </p>
+				<p><strong>В сети:</strong> {this.state.activeDevices} </p>
+				<p><strong>Не отвечают:</strong> {this.state.inactiveDevices} </p>
+			</div>
+			
 		)
 	}
 }
+
 
 
 /* Строка для девайсов */

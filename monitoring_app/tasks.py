@@ -13,5 +13,6 @@ def hello_world():
 		
 @task()		
 def ping_task():
-	hosts = Device.objects.all()
-	ping_all_hosts(hosts)
+
+	
+	ping_all_hosts()
