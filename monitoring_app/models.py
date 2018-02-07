@@ -19,6 +19,7 @@ class Device(models.Model):
 	description = models.CharField(max_length=500, blank=True)
 	access_status = models.BooleanField(default=False)
 	last_activity = models.DateTimeField(auto_now_add=True, blank=True)
+	create_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 	
 	def __str__(self):
 		return self.device_type + " " + self.host_ip

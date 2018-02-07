@@ -28,6 +28,7 @@ class DevicesList(generics.ListCreateAPIView):
 
 	# перепишем post для замены return
 	def create(self, request, *args, **kwargs):
+		
 		response = {'successing_create': False}
 		serializer = self.get_serializer(data=request.data)
 		if serializer.is_valid():
@@ -44,7 +45,7 @@ class DeviceDetail(generics.RetrieveUpdateDestroyAPIView):
 	"""
 	Retrieve, update or delete device
 	"""
-	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+	#permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 	queryset = Device.objects.all()
 	serializer_class = DeviceSerializer
 	
@@ -53,7 +54,7 @@ class GeneralStatistic(APIView):
 	"""
 	List general statistic values
 	"""
-	#permission_classes = (permissions.IsAuthenticated,)
+	#permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 	
 	def get(self, request):
 		device_count = Device.objects.count()

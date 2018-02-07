@@ -9,8 +9,12 @@ export class DeviceDetail extends React.Component{
 					deviceAddress:'',
 					deviceAccessStatus:'',
 					deviceDescription:'',
-					deviceLastActivity:''}
+					deviceLastActivity:'',
+					deviceCreateDate:''}
+		this.goBack = this.goBack.bind(this);
+		this.deleteDevice = this.deleteDevice.bind(this)
 	}
+	
 	
 	componentDidMount(){
 		document.title = 'Детали'
@@ -19,17 +23,42 @@ export class DeviceDetail extends React.Component{
 	
 	async loadDevice(){
 			let res = await fetch("/api/device/" + this.state.deviceId + "/").then(response => response.json())
-			let d = new Date(res.last_activity).toLocaleString('ru')
-			console.log(d)
+			console.log(res)
+			let lastActivity = new Date(res.last_activity).toLocaleString('ru')
+			let createDate = new Date(res.create_date).toLocaleString('ru')
 			this.setState({deviceType: res.device_type,
 						  deviceIP: res.host_ip,
 						  deviceAddress: res.address,
 						  deviceAccessStatus: res.access_status,
 						  deviceDescription: res.description,
-						  deviceLastActivity: d
+						  deviceLastActivity: lastActivity,
+						  deviceCreateDate: createDate
 						  })
 	}
 	
+	goBack(){
+		this.props.history.goBack()
+	}
+	
+	async deleteDevice(){
+		let result = window.confirm('Вы уверены что хотите удалить данное устройство?');
+		console.log(result)
+		if (result === true){
+			let id = this.state.deviceId
+			await fetch('/api/device/' + id + '/',{
+				method: 'DELETE',
+				headers:{
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+					}
+				})
+			this.props.history.push('/')
+		}
+	}
+
+
+		
+		
 	render(){
 		let status = this.state.deviceAccessStatus ? 'Доступен' : 'Не доступен';
 		
@@ -42,8 +71,11 @@ export class DeviceDetail extends React.Component{
 					<li><strong>Адрес:</strong> { this.state.deviceAddress } </li>
 					<li><strong>Статус:</strong> { status } </li>
 					<li><strong>Описание:</strong> { this.state.deviceDescription } </li>
+					<li><strong>Добавлен в систему:</strong> { this.state.deviceCreateDate } </li>
 					<li><strong>Последнее появление в сети:</strong> { this.state.deviceLastActivity } </li>
 				</ul>
+				<button onClick={this.goBack}> Назад </button>
+				<button onClick={this.deleteDevice}> Удалить устройство </button>
 			</div>
 		)
 	}

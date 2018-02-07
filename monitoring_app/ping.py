@@ -14,7 +14,6 @@ def ping_all_hosts():
 	hosts = Device.objects.all()
 	ip_array = []
 	for host in hosts:
-		print(host)
 		ip_array.append(host.host_ip)
 	hosts = ' '.join(ip_array)
 	args = 'fping {hosts} -c 40 -q'.format(hosts=hosts)

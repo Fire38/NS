@@ -130,6 +130,8 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 
+#куда редиректит если не вошел
+LOGIN_URL = '/auth'
 
 #WEBPACK CONFIG
 WEBPACK_LOADER = {

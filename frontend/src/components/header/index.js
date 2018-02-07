@@ -26,6 +26,7 @@ export class Header extends React.Component{
                             <li className="nav-item active">
                                 <NavLink to="/logout" className="nav-link" >Выйти</NavLink>
                             </li>
+							<a href='/logout'> Exit</a>
                         </ul>
                     </div>
                 </nav>

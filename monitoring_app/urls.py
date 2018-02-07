@@ -1,8 +1,10 @@
 from django.urls import path
 
-from .views import index
+from .views import index, auth, logout_user
 
 urlpatterns = [
+    path('auth', auth, name='auth'),
+    path('logout', logout_user, name='logout'),
     path('', index, name='index'),
     path('device/ups', index),
     path('device/logdog', index),
