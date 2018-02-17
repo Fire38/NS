@@ -1,4 +1,5 @@
 import React from 'react';
+import $ from 'jquery';
 
 export class DeviceDetail extends React.Component{
 	constructor(props){
@@ -20,6 +21,21 @@ export class DeviceDetail extends React.Component{
 		document.title = 'Детали'
 		this.loadDevice()
 	}
+	
+		getCookie(name){
+		var cookieValue = null;
+		if (document.cookie && document.cookie != ''){
+			var cookies = document.cookie.split(';');
+			for (var i=0; i<cookies.length; i++){
+				var cookie = $.trim(cookies[i]);
+				if (cookie.substring(0, name.length + 1) == (name + '=')){
+					cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+					break;
+				}
+			}
+		}
+		return cookieValue;
+	}	
 	
 	async loadDevice(){
 			let res = await fetch("/api/device/" + this.state.deviceId + "/").then(response => response.json())
@@ -47,7 +63,9 @@ export class DeviceDetail extends React.Component{
 			let id = this.state.deviceId
 			await fetch('/api/device/' + id + '/',{
 				method: 'DELETE',
+				credentials: 'same-origin',
 				headers:{
+					'X-CSRFToken': this.getCookie("csrftoken"),
 					'Accept': 'application/json',
 					'Content-Type': 'application/json'
 					}
@@ -56,12 +74,10 @@ export class DeviceDetail extends React.Component{
 		}
 	}
 
-
 		
 		
 	render(){
 		let status = this.state.deviceAccessStatus ? 'Доступен' : 'Не доступен';
-		
 		return (
 			<div className='container'>
 				<h3>Детали </h3>
@@ -80,3 +96,4 @@ export class DeviceDetail extends React.Component{
 		)
 	}
 }
+			

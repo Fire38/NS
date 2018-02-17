@@ -4,6 +4,7 @@ import { Header } from './header/';
 import { MonitoringDisplay } from './workspace/monitoringDisplay/';
 import { AddForm } from './workspace/form/';
 import { DeviceDetail } from './workspace/monitoringDisplay/deviceDetail/';
+import { Map } from './workspace/map/';
 
 export class App extends React.Component{
 	render(){
@@ -21,6 +22,7 @@ export class App extends React.Component{
 						<Route path='/device' component={ MonitoringDisplay } />
 						<Route path='/add_device' component={ AddForm } />
 						<Route path='/detail/:id' component={ DeviceDetail } />
+						<Route path='/map' component={ Map } />
 					</Switch>
 				</main>
 					

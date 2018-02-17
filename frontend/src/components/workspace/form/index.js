@@ -3,20 +3,34 @@ import ReactDOM from 'react-dom';
 //https://www.npmjs.com/package/django-react-csrftoken
 import DjangoCSRFToken from 'django-react-csrftoken';
 import $ from 'jquery';
+import SingleInput from './components/singleInput';
+import RadioGroup from './components/radioGroup';
+import TextArea from './components/textArea';
 
+//https://lorenstewart.me/2016/10/31/react-js-forms-controlled-components/
 
+	
 export class AddForm extends React.Component{
+
 	constructor(props){
 		super(props);
-		this.state = { };
-		this.handleSubmit = this.handleSubmit.bind(this);
+		this.state = {
+			'host_ip': '',
+			'address': '',
+			'description': ''
+		}
+		this.handleIp = this.handleIp.bind(this);
+		this.handleAddress = this.handleAddress.bind(this);
+		this.handleDescription = this.handleDescription.bind(this);
 		this.onChange = this.onChange.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleClearForm = this.handleClearForm.bind(this);
 	}
 
 	
 	componentDidMount() {
 		document.title = "Добавить устройство"
-		ReactDOM.findDOMNode(this.refs.ip).focus()
+		//ReactDOM.findDOMNode(this.refs.ip).focus()
 	}
 	
 	
@@ -34,19 +48,40 @@ export class AddForm extends React.Component{
 		}
 		return cookieValue;
 	}
-
 	
+	handleIp(e){
+		this.setState({'host_ip': e.target.value})
+	}
+	
+	handleAddress(e){
+		this.setState({'address': e.target.value})
+	}
+	
+	handleDescription(e){
+		this.setState({'description': e.target.value})
+	}
+		
 	onChange(e){
 		this.setState({[e.target.name]: e.target.value});
 		console.log('YA TUT')
 		
 	}
 	
+	handleClearForm(e){
+		//e.preventDefault
+		this.setState({
+			'host_ip': '',
+			'address': '',
+			'description': '',
+		});
+	}
+	
 	async handleSubmit(e){
 		e.preventDefault();
-
+		console.log(this.getCookie("csrftoken"))
 		let res = await fetch('api/devices/add/', {
 			method: 'POST',
+			credentials: 'same-origin',
 			headers:{ 
 				'X-CSRFToken': this.getCookie("csrftoken"),
 				'Accept': 'application/json',
@@ -55,6 +90,8 @@ export class AddForm extends React.Component{
 			body: JSON.stringify(this.state)
 		}).then(response => response.json());
 		this.setState({'successing_create': res.successing_create})
+		console.log(this.state)
+		this.handleClearForm(e);
 	}
 
 	
@@ -107,31 +144,36 @@ export class AddForm extends React.Component{
 					<br/>
 					
 					
-					<input
-						type='text'
-						className='addHostIp'
-						name='host_ip'
-						placeholder='Введите ip'
-						ref='ip'
-						onChange={this.onChange}
-						required
-					/>
+					<SingleInput
+						className = {'addHostIp'}
+						inputType = {'text'}
+						title = {'IP'}
+						name = {'host_ip'}
+						controlFunc = {this.handleIp}
+						content = {this.state.host_ip}
+						placeholder = {'Введите ip'}
+						/>
 					<br/>
-					<input
-						type='text'
-						className='addAddress'
-						name='address'
-						placeholder='Введите адрес'
-						onChange={this.onChange}
-						required
-					/>
+					<SingleInput
+						className = {'addAddress'}
+						inputType = {'text'}
+						title = {'Address'}
+						name = {'address'}
+						controlFunc = {this.handleAddress}
+						content = {this.state.address}
+						placeholder = {'Введите адрес'} />
+
 					<br/>
-					<textarea
-						className='addDescription'
-						name='description'
-						placeholder='Описание'
-						onChange={this.onChange}
-					/>
+					<TextArea
+							className  = {'addDescription'}
+							title = {''}
+							rows = {4}
+							resize = {false}
+							content = {this.state.description}
+							name = {'description'}
+							controlFunc = {this.handleDescription}
+							placeholder = {'Описание'} />
+
 					<br/>
 					<button
 						className='addButton'

@@ -8,12 +8,13 @@ from rest_framework.response import Response
 from monitoring_app.models import Device
 from .serializers import DeviceSerializer
 
+
 # Create your views here.
 class DevicesList(generics.ListCreateAPIView):
 	"""
 	List all devices or create new device
 	"""
-	#permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 	queryset = Device.objects.all()
 	serializer_class = DeviceSerializer
 	lookup_url_kwarg = 'device_type'
@@ -28,8 +29,8 @@ class DevicesList(generics.ListCreateAPIView):
 
 	# перепишем post для замены return
 	def create(self, request, *args, **kwargs):
-		
 		response = {'successing_create': False}
+		data = request.data
 		serializer = self.get_serializer(data=request.data)
 		if serializer.is_valid():
 			self.perform_create(serializer)
@@ -39,13 +40,11 @@ class DevicesList(generics.ListCreateAPIView):
 	
 
 
-
-
 class DeviceDetail(generics.RetrieveUpdateDestroyAPIView):
 	"""
 	Retrieve, update or delete device
 	"""
-	#permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 	queryset = Device.objects.all()
 	serializer_class = DeviceSerializer
 	
@@ -54,7 +53,7 @@ class GeneralStatistic(APIView):
 	"""
 	List general statistic values
 	"""
-	#permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 	
 	def get(self, request):
 		device_count = Device.objects.count()
