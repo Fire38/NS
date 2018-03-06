@@ -151,7 +151,7 @@ CELERY_TIMEZONE = 'Asia/Irkutsk'
 CELERY_BEAT_SCHEDULE = {
     'ping_task': {
         'task': 'monitoring_app.tasks.ping_task',
-        'schedule': crontab(minute='*/1'),
+        'schedule': crontab(minute='*/2'),
 
     }
 }

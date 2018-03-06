@@ -3,6 +3,10 @@ import time
 import shlex
 import os
 import re
+import requests
+import lxml.html as html
+import psycopg2
+
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'NMS.settings')
 
@@ -10,64 +14,48 @@ import django
 django.setup()
 from monitoring_app.models import Device
 
+conn = psycopg2.connect("host='localhost' dbname='nms_db' user='admin' password='Zte261192'")
+cur = conn.cursor()
 
-q = Device.objects.all()
+res = requests.get('https://kladr-rf.ru/38/000/005/041/')
 
-ip_array = []
+doc = html.document_fromstring(res.content)
 
-for d in q:
-  ip_array.append(d.host_ip)
-
-#print('Все айпишники: ', ip_array)
-
-host = ' '.join(ip_array)
-cmd = 'fping {hosts} -c 4 -q'.format(hosts=host)
-
-a = shlex.split(cmd)
-print(a)
-
-res = subprocess.Popen(a, stderr=subprocess.PIPE)
-print("================================================")
-result = res.communicate()[1]
-
-ip = re.compile(r'(\d+.\d+.\d+.\d+)')
-packets_count = re.compile(r'(\d+)\/(\d+)\/(\d+%)')
-packets_details = re.compile(r'(\d+.\d+)\/(\d+.\d+)\/(\d+.\d+)')
-for line in result.decode('utf-8').splitlines():
-  print(line.split(':'))
-  match_ip = ip.search(line.split(':')[0])
-  h = Device.objects.get(host_ip=match_ip.groups()[0])
-  print(type(h))
-  #print(match_ip.groups())
-  match_packets_count = packets_count.search(line.split(':')[1])
-  #print(match_packets_count.groups())
-  match_packets_details = packets_details.search(line.split(':')[1])
-  #try:
-    #print(match_packets_details.groups())
-  #except:
-    #pass
+streets = doc.cssselect('div.span4 p a')
+for street in streets:
+  if 'кооператив' not in street.text_content():
+    print(street.text_content())
+    link = street.get('href')
+    res = requests.get(link)
+    doc = html.document_fromstring(res.content)
+    tables = doc.cssselect('div.span8 table')
+    for table in tables:
+      if 'Интервал домов' in table.text_content():
+        rows = table.cssselect('tbody tr')
+        for row in rows:
+          house_numbers = row.cssselect('td')
+          num = house_numbers[0].text_content().split(',')
+          print(num)
+          for n in num:
+            address = street.text_content() + " " + n
+            address = address.split()
+            for i in address:
+              if i == 'Улица' or i == 'Переулок' or i == 'Проспект':
+                name = i
+                index_st = address.index(i)
+                del address[index_st]
+                print(address)
+                address.insert(0, name.lower())
+                
+                address = ' '.join(address)
+                print(address)
+            cur.execute("INSERT INTO monitoring_app_address (street_and_house) VALUES (%s)",(str(address),))
+            conn.commit()
+            
+    """
+    for i in table:
+      print(i.text_content())"""
+  else:
+    print(street.text_content())
   
-#print("RESULT=", result.decode('utf-8').splitlines())
 
-#print(result)
-
-#for line in result:
-#  print("LINE=", line)
-
-
-"""
-def get_output(cmd):
-  args = shlex.split(cmd)
-  
-  return subprocess.Popen(args, stdout=subprocess.PIPE)
-
-def get_ping(hosts):
-  for host in hosts:
-    cmd = "fping {host} -C 10 -q -i 700 -t 3000".format(host=host)
-    print(cmd)
-    res = get_output(cmd)
-    #print(res)
-    time.sleep(1)
-
-get_ping(ip_array)
-"""

@@ -15,11 +15,11 @@ DEVICES_TYPE_CHOICES = (
 class Device(models.Model):
 	device_type = models.CharField(max_length=15, choices=DEVICES_TYPE_CHOICES, default='no_choice')
 	host_ip = models.GenericIPAddressField(protocol='IPv4', unique=True)
-	address = models.CharField(max_length=50)
 	description = models.CharField(max_length=500, blank=True)
 	access_status = models.BooleanField(default=False)
 	last_activity = models.DateTimeField(auto_now_add=True, blank=True)
 	create_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+	network_point = models.OneToOneField('Network_point', null=True, blank=True, on_delete=models.CASCADE)
 	
 	def __str__(self):
 		return self.device_type + " " + self.host_ip
@@ -27,7 +27,23 @@ class Device(models.Model):
 	def ping(self):
 		res = subprocess.call(['ping', '-c', '3', '-W', '3','-q', self.host_ip,])
 		return res"""
-		
+
+
+class Address(models.Model):
+	street_and_house = models.CharField(max_length=60, blank=False, null= False)
+	#network_point = models.ForeignKey('Network_point', on_delete=models.CASCADE)
+	
+	def __str__(self):
+		return self.street_and_house
+
+
+class Network_point(models.Model):
+	connected_from = models.IntegerField(null=True)
+	address = models.ForeignKey('Address', on_delete=models.CASCADE)
+	
+	lat = models.DecimalField(max_digits=8, decimal_places=4, blank=True, null=True)
+	lng = models.DecimalField(max_digits=8, decimal_places=4,blank=True, null=True)
+	
 
 class Statistic(models.Model):
 	device = models.ForeignKey('Device', on_delete=models.CASCADE)

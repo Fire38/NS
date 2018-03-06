@@ -24,15 +24,41 @@
 }
 
 
+/* РАЗДЕЛ "ДОБАВИТЬ" */
+
+/*форма добавить*/
+#addressForm{
+	margin: 40px 60px 40px 60px;
+	border-radius: 20px;
+	background-color:  #f7f7f7;
+}
+
 .addDeviceForm{
-	position: absolute;
-	margin-top:10%;
-	left:30%;
+	padding: 30px 50px 30px 50px;
 }
 
 .addHostIp, .addAddress, .addDescription{
 	margin-top:10px;
 	width:400px;
+}
+
+/*форма связать*/
+
+.bindAddressDeviceForm{
+	margin-left: 50px;
+}
+
+.rw-list{
+	overflow-y: auto;
+	height:350px;
+}
+
+.rw-widget-input{
+	width:400px;
+}
+
+.rw-btn{
+	display:none;
 }
 
 

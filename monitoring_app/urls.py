@@ -12,5 +12,7 @@ urlpatterns = [
     #детали устройства
     path('detail/<int:id>', index),
     #форма
-    path('add_device', index, name='add')
+    path('add_device', index, name='add'),
+    #карта
+    path('map', index)
 ]

@@ -1,6 +1,7 @@
 import React from 'react';
 import $ from 'jquery';
 
+
 export class DeviceDetail extends React.Component{
 	constructor(props){
 		super(props)

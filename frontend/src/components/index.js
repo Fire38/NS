@@ -4,7 +4,8 @@ import { Header } from './header/';
 import { MonitoringDisplay } from './workspace/monitoringDisplay/';
 import { AddForm } from './workspace/form/';
 import { DeviceDetail } from './workspace/monitoringDisplay/deviceDetail/';
-import { Map } from './workspace/map/';
+import { SimpleExample } from './workspace/map/';
+import { Logout } from './other/Logout.js'
 
 export class App extends React.Component{
 	render(){
@@ -22,7 +23,8 @@ export class App extends React.Component{
 						<Route path='/device' component={ MonitoringDisplay } />
 						<Route path='/add_device' component={ AddForm } />
 						<Route path='/detail/:id' component={ DeviceDetail } />
-						<Route path='/map' component={ Map } />
+						<Route path='/map' component={ SimpleExample } />
+						<Route path='/logout' component={ Logout } />
 					</Switch>
 				</main>
 					
