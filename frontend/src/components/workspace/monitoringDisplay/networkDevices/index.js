@@ -1,29 +1,33 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import nut from '../../../../images/nut.png'
 
 
 /* Статистика на главной */
 export class NetworkStatistic extends React.Component{
 	constructor(props){
-		super(props)
-		this.state = {deviceCount: '',
+		super(props);
+		this.state = {
+					deviceCount: '',
 					activeDevices: '',
-					inactiveDevices: ''}
+					inactiveDevices: ''
+					};
 	}
+	
 	componentDidMount(){
-		document.title = 'Главная'
-		this.loadStatistic()
+		document.title = 'Главная';
+		this.loadStatistic();
 
 	}
 	
 	async loadStatistic(){
-		let res = await fetch("/api/statistic/").then(response => response.json())
-		console.log(res)
-		this.setState({deviceCount: res.device_count,
-					  activeDevices: res.active_devices,
-					  inactiveDevices: res.inactive_devices
-					  })
+		let res = await fetch("/api/statistic/").then(response => response.json());
+		console.log(res);
+		this.setState({
+						deviceCount: res.device_count,
+						activeDevices: res.active_devices,
+						inactiveDevices: res.inactive_devices
+					  });
 	}
 	
 	render(){
@@ -62,7 +66,15 @@ export class NetworkElements extends React.Component {
 		let color = this.props.access_status === true ? "green" : "red";
 		let detailUrl = '/detail/' + this.props.id ;
 		return (
-			<div className='col-2' id='NetworkElements' style={{backgroundColor: color}} key={this.props.id} > {this.props.host_ip} <Link to={detailUrl}><img className="details-icon" src={nut} alt='детали'/></Link> </div>
+			<div className='col-2'
+				id='NetworkElements'
+				style={{backgroundColor: color}}
+				key={this.props.id}>
+					{this.props.host_ip}
+					<Link to={detailUrl}>
+						<img className="details-icon" src={nut} alt='детали'/>
+					</Link>
+			</div>
 		)
 	}
 }

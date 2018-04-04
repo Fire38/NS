@@ -6,11 +6,11 @@ export default class TopologyLayer extends React.Component{
 	
 
 	render(){
-		console.log(this.props)
+		//console.log(this.props)
 		if (this.props.enable){
 			let polyline1 = this.props.coord
 			return(
-			<Polyline color="black" positions={polyline1} />
+			<Polyline color="grey" positions={polyline1} />
 			)
 		}else{
 			return(

@@ -1,16 +1,22 @@
 from rest_framework import serializers
-from monitoring_app.models import Device, Address, Network_point
+from monitoring_app.models import Device, Address, Network_point, Unmanaged_device
 
 class DeviceSerializer(serializers.ModelSerializer):
 	address = serializers.SerializerMethodField()
 	
 	class Meta:
 		model = Device
-		fields = ('id','device_type', 'host_ip', 'description', 'access_status', 'last_activity', 'create_date', 'address')
+		fields = ('id', 'device_type', 'host_ip', 'description', 'access_status', 'last_activity', 'create_date', 'address')
 	
 	def get_address(self, obj):
 		return self.context.get('address')
-		
+	
+
+class UnmanagedDeviceSerializer(serializers.ModelSerializer):
+	
+	class Meta:
+		model = Unmanaged_device
+		fields = ('id', 'name')
 		
 class AddressSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -23,7 +29,15 @@ class DevicesSerializer(serializers.ModelSerializer):
 		model = Device
 		fields = ('id', 'host_ip')
 		
-		
+
+
+class NetworkPointSerializer(serializers.ModelSerializer):
+	
+	class Meta:
+		model = Network_point
+		fields = ('pk', 'connected_from', 'address', 'description', 'lat', 'lng')
+
+"""
 class NetworkPointSerializer(serializers.ModelSerializer):
 	id = serializers.SerializerMethodField()
 	address = serializers.SerializerMethodField()
@@ -52,4 +66,4 @@ class NetworkPointSerializer(serializers.ModelSerializer):
 		return obj.device.access_status
 	
 	def get_description(self, obj):
-		return obj.device.description
+		return obj.device.description"""

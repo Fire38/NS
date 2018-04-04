@@ -4,14 +4,14 @@ import PropTypes from 'prop-types';
 export class SingleInput extends React.Component{
 	render(){
 		return(
-			<input
+			<input 
 				className={this.props.className}
 				name = { this.props.name }
 				type = { this.props.inputType }
 				value = { this.props.content }
 				onChange = { this.props.controlFunc }
 				placeholder = { this.props.placeholder }
-				required />
+				 />
 		)
 	}
 }

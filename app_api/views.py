@@ -5,14 +5,15 @@ from django.http import Http404, HttpResponseRedirect, HttpResponse, JsonRespons
 from django.shortcuts import reverse
 from rest_framework.response import Response
 
-from monitoring_app.models import Device, Address, Network_point
-from .serializers import DeviceSerializer, AddressSerializer, DevicesSerializer, NetworkPointSerializer
+from .logic import get_coords
+from monitoring_app.models import Device, Address, Network_point, Unmanaged_device
+from .serializers import DeviceSerializer, AddressSerializer, DevicesSerializer, NetworkPointSerializer, UnmanagedDeviceSerializer
 
 
 # Create your views here.
 class DevicesList(generics.ListCreateAPIView):
 	"""
-	List all devices or create new device
+	List all devices with specified type or create new device
 	"""
 	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 	queryset = Device.objects.all()
@@ -21,11 +22,23 @@ class DevicesList(generics.ListCreateAPIView):
 	
 	def get_queryset(self):
 		device_type = self.kwargs.get(self.lookup_url_kwarg)
-		try:
-			devices = Device.objects.filter(device_type=device_type).order_by('host_ip')
+		if device_type == 'all':
+			devices = Device.objects.all()
 			return devices
-		except:
-			raise Http404
+		else:
+			try:
+				devices = Device.objects.filter(device_type=device_type).order_by('host_ip')
+				return devices
+			except:
+				raise Http404
+
+
+class UnmanagedDevicesList(generics.ListAPIView):
+	""" Return unmanaged devices list """
+	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+	queryset = Unmanaged_device.objects.all()
+	serializer_class = UnmanagedDeviceSerializer
+
 
 	# перепишем post для замены return
 	def create(self, request, *args, **kwargs):
@@ -40,6 +53,7 @@ class DevicesList(generics.ListCreateAPIView):
 
 
 class DeviceDetail(generics.RetrieveUpdateDestroyAPIView):
+	""" Return device details """
 	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 	queryset = Device.objects.all()
 	serializer_class = DeviceSerializer
@@ -74,9 +88,19 @@ class DeviceForDropdownList(generics.ListAPIView):
 		return devices
 
 
-class BindDeviceAndAddress(APIView):
+class BindDeviceAndNP(APIView):
 	def post(self, request):
-		print(request.data)
+		np_id = request.data.get('networkPoint')
+		network_point = Network_point.objects.get(id=np_id)
+		device_id = request.data.get('device')
+		#костыль т к 2 таблицы устройств и разные id
+		try:
+			device = Device.objects.get(id=device_id)
+			device.network_point = network_point
+		except:
+			device = Unmanaged_device.objects.get(id=device_id)
+			device.network_points.add(network_point)
+		device.save()
 		return Response({'a':'123'})
 
 
@@ -85,22 +109,52 @@ class NetworkPoint(generics.ListCreateAPIView):
 	queryset = Network_point.objects.all()
 	serializer_class = NetworkPointSerializer
 	
-	
 	def create(self, request, *args, **kwargs):
-		print(request.data)
-		ip = request.data.get('device')
-		device = Device.objects.get(host_ip=ip)
-		adr = request.data.get('address')
-		address = Address.objects.get(street_and_house=adr)
-		lat = request.data.get('lat')
-		lng = request.data.get('lng')
-		connected_from = request.data.get('connected_from')
-		n = Network_point.objects.create(address=address, lat=lat, lng=lng, connected_from=connected_from)
-		device.network_point = n
-		device.save()
+		response = {'successing_create': False}
+		address = Address.objects.get(street_and_house=self.request.data['address']).id
+		request.data['address'] = address
+		serializer = self.get_serializer(data=request.data)
+		if serializer.is_valid():
+			self.perform_create(serializer)
+			headers = self.get_success_headers(serializer.data)
+			response['successing_create'] = True
+		return JsonResponse(response)
+
+class NetworkPointDetails(APIView):
+	def get(self, request):
+		response = []
+		np = Network_point.objects.all()
+		for point in np:
+			mas = {}
+			mas['point_id'] = point.id
+			mas['parent_id'] = point.connected_from
+			mas['address'] = point.address.street_and_house
+			
+			unman_dev = point.unmanaged_device_set.all()
+			unman_devices = UnmanagedDeviceSerializer(unman_dev, many=True)
+			mas['unman_devices'] = unman_devices.data
+			
+			man_dev = point.device_set.all()
+			man_devices = DeviceSerializer(man_dev, many=True)
+			mas['man_devices'] = man_devices.data
+			
+			mas['description'] = point.description
+			mas['lat'] = point.lat
+			mas['lng'] = point.lng
+			response.append(mas)
+		return Response(response)
+			
 		
-		return JsonResponse({'a':'pff'})
-	
+class NetworkPointCoords(APIView):
+	def get(self, request):
+		coords = get_coords()
+		print(coords)
+		return Response(coords)
+
+
+
+
+
 
 class GeneralStatistic(APIView):
 	"""

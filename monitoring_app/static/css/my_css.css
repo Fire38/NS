@@ -26,21 +26,27 @@
 
 /* РАЗДЕЛ "ДОБАВИТЬ" */
 
-/*форма добавить*/
-#addressForm{
+/*форма добавить устройство*/
+.form{
 	margin: 40px 60px 40px 60px;
 	border-radius: 20px;
 	background-color:  #f7f7f7;
 }
 
-.addDeviceForm{
+.addDeviceForm, .addNetworkPointForm, .bindAddressDeviceForm{
 	padding: 30px 50px 30px 50px;
 }
 
-.addHostIp, .addAddress, .addDescription{
+.addHostIp, .addAddress, .addDescription, .addDeviceName{
 	margin-top:10px;
-	width:400px;
+	width:450px;
 }
+
+/*форма добавить сетевой узел*/
+.networkPointForm{
+	
+}
+
 
 /*форма связать*/
 

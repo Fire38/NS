@@ -40,7 +40,7 @@ for street in streets:
             address = street.text_content() + " " + n
             address = address.split()
             for i in address:
-              if i == 'Улица' or i == 'Переулок' or i == 'Проспект':
+              if i == 'Улица' or i == 'Переулок' or i == 'Проспект' or i == 'Проезд':
                 name = i
                 index_st = address.index(i)
                 del address[index_st]
